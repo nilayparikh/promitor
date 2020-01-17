@@ -15,6 +15,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<AzureMetadataV1, AzureMetadata>();
             CreateMap<MetricDefaultsV1, MetricDefaults>();
             CreateMap<AggregationV1, Aggregation>();
+            CreateMap<MetricDimensionV1, MetricDimension>();
             CreateMap<ScrapingV1, Configuration.Model.Scraping>();
             CreateMap<AzureMetricConfigurationV1, AzureMetricConfiguration>();
             CreateMap<MetricAggregationV1, MetricAggregation>();
@@ -32,13 +33,18 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<StorageQueueResourceV1, StorageQueueResourceDefinition>();
             CreateMap<VirtualMachineResourceV1, VirtualMachineResourceDefinition>();
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
+            CreateMap<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>();
+            CreateMap<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>();
+            CreateMap<AppPlanResourceV1, AppPlanResourceDefinition>();
+            CreateMap<WebAppResourceV1, WebAppResourceDefinition>();
+            CreateMap<FunctionAppResourceV1, FunctionAppResourceDefinition>();
 
             CreateMap<MetricDefinitionV1, PrometheusMetricDefinition>();
 
             CreateMap<MetricDefinitionV1, MetricDefinition>()
                 .ForMember(m => m.PrometheusMetricDefinition, o => o.MapFrom(v1 => v1));
             
-            CreateMap<AzureResourceDefinitionV1, AzureResourceDefinition>()
+            CreateMap<AzureResourceDefinitionV1, IAzureResourceDefinition>()
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
                 .Include<CosmosDbResourceV1, CosmosDbResourceDefinition>()
@@ -49,7 +55,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>()
                 .Include<StorageQueueResourceV1, StorageQueueResourceDefinition>()
                 .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
-                .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
+                .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>()
+                .Include<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>()
+                .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>()
+                .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
+                .Include<WebAppResourceV1, WebAppResourceDefinition>()
+                .Include<FunctionAppResourceV1, FunctionAppResourceDefinition>();
         }
     }
 }

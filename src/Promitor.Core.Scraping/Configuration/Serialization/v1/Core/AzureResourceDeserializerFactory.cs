@@ -54,6 +54,21 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.SqlDatabase:
                     var sqlDatabaseLogger = _loggerFactory.CreateLogger<SqlDatabaseDeserializer>();
                     return new SqlDatabaseDeserializer(sqlDatabaseLogger);
+                case ResourceType.SqlManagedInstance:
+                    var sqlManagedInstanceLogger = _loggerFactory.CreateLogger<SqlManagedInstanceDeserializer>();
+                    return new SqlManagedInstanceDeserializer(sqlManagedInstanceLogger);
+                case ResourceType.VirtualMachineScaleSet:
+                    var virtualMachineScaleSetLogger = _loggerFactory.CreateLogger<VirtualMachineScaleSetDeserializer>();
+                    return new VirtualMachineScaleSetDeserializer(virtualMachineScaleSetLogger);
+                case ResourceType.AppPlan:
+                    var appPlanLogger = _loggerFactory.CreateLogger<AppPlanDeserializer>();
+                    return new AppPlanDeserializer(appPlanLogger);
+                case ResourceType.WebApp:
+                    var webAppLogger = _loggerFactory.CreateLogger<WebAppDeserializer>();
+                    return new WebAppDeserializer(webAppLogger);
+                case ResourceType.FunctionApp:
+                    var functionAppLogger = _loggerFactory.CreateLogger<FunctionAppDeserializer>();
+                    return new FunctionAppDeserializer(functionAppLogger);
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }

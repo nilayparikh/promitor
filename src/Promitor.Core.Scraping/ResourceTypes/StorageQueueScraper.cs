@@ -5,6 +5,7 @@ using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Integrations.AzureMonitor;
 using Promitor.Integrations.AzureStorage;
 
 namespace Promitor.Core.Scraping.ResourceTypes
@@ -19,7 +20,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
             _azureStorageQueueClient = new AzureStorageQueueClient(scraperConfiguration.Logger);
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, StorageQueueResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, StorageQueueResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             Guard.NotNull(scrapeDefinition, nameof(scrapeDefinition));
             Guard.NotNull(scrapeDefinition.AzureMetricConfiguration, nameof(scrapeDefinition.AzureMetricConfiguration));
@@ -47,7 +48,17 @@ namespace Promitor.Core.Scraping.ResourceTypes
                 {"queue_name", resource.QueueName}
             };
 
-            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName, resourceUri, foundMetricValue, labels);
+            var measuredMetrics = new List<MeasuredMetric>
+            {
+                MeasuredMetric.CreateWithoutDimension(foundMetricValue)
+            };
+
+            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName, resourceUri, measuredMetrics, labels);
+        }
+
+        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, StorageQueueResourceDefinition resource)
+        {
+            return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName);
         }
     }
 }

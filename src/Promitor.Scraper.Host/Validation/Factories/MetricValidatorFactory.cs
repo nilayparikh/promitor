@@ -33,6 +33,16 @@ namespace Promitor.Scraper.Host.Validation.Factories
                     return new PostgreSqlMetricValidator();
                 case ResourceType.SqlDatabase:
                     return new SqlDatabaseMetricValidator();
+                case ResourceType.SqlManagedInstance:
+                    return new SqlManagedInstanceMetricValidator();
+                case ResourceType.VirtualMachineScaleSet:
+                    return new VirtualMachineScaleSetMetricValidator();
+                case ResourceType.WebApp:
+                    return new WebAppMetricValidator();
+                case ResourceType.AppPlan:
+                    return new AppPlanMetricValidator();
+                case ResourceType.FunctionApp:
+                    return new FunctionAppMetricValidator();
             }
 
             throw new ArgumentOutOfRangeException(nameof(resourceType), $"No validation rules are defined for metric type '{resourceType}'");

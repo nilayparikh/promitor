@@ -8,6 +8,7 @@ Here is an overview of how we label metrics.
 There are a couple of scenarios where labels are being added:
 
 - Built-in labels
+- Metric dimension labels
 - Scaler-specific labels
 - Bring-your-own labels
 
@@ -23,15 +24,24 @@ built-in labels:
 - `resource_group` - Name of the resource group.
 - `instance_name` - Name of the instance, if applicable.
 
+## Metric dimension labels
+
+Metrics support specifying a dimension which will be scraped in Azure Monitor.
+
+Every metric value will be reported under the configured metric name, but a
+label for the dimension and it's respective value will be added.
+
 ## Scraper-specific labels
 
 Every scraper can provide additional labels to provide more information.
 
 Currently we support this for:
 
+- Azure Function App
 - Azure Service Bus
 - Azure SQL Database
 - Azure Storage Queue
+- Azure Web App
 
 For more information, we recommend reading the [scraper-specific documentation](./../configuration/v1.x/metrics/#supported-azure-services).
 

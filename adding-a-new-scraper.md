@@ -11,17 +11,23 @@ discuss your scenario_
 
 ## Configuration
 
+<!-- markdownlint-disable MD013 -->
 1. Add your new scraping type to the `Promitor.Core.Scraping.Configuration.Model.ResourceType`.
 2. Describe the resource for which you're scraping metrics by creating `<New-Type>ResourceDefinition`
   and inherit from
   `Promitor.Core.Scraping.Configuration.Model.Metrics.AzureResourceDefinition` -
   this class should go in `.\src\Promitor.Core.Scraping\Configuration\Model\Metrics\ResourceTypes`.
-3. Create a new Deserializer in `.\src\Promitor.Core.Scraping\Configuration\Serialization\v1\Providers`.
+3. Describe the resource configurationh for which you're scraping metrics by creating
+ `<New-Type>ResourceV1`
+  and inherit from
+   `Promitor.Core.Scraping.Configuration.Serialization.v1.Model.AzureResourceDefinitionV1` -
+  this class should go in `.\src\Promitor.Core.Scraping\Configuration\Serialization\v1\Model\ResourceTypes`.
+4. Create a new Deserializer in `.\src\Promitor.Core.Scraping\Configuration\Serialization\v1\Providers`.
   This must inherit from `ResourceDeserializer`.
-4. Update `Promitor.Core.Scraping.Configuration.v1.Core.AzureResourceDeserializerFactory`
+5. Update `Promitor.Core.Scraping.Configuration.v1.Core.AzureResourceDeserializerFactory`
   to handle your new resource type by returning a new instance of the Deserializer
   you created in the previous step.
-5. Provide a unit test in `.\src\Promitor.Scraper.Tests.Unit\Serialization\v1\Providers`
+6. Provide a unit test in `.\src\Promitor.Scraper.Tests.Unit\Serialization\v1\Providers`
   that tests the deserialization based on our sample. Your test class must inherit
   from `ResourceDeserializerTest` to ensure the inherited functionality is tested.
 
@@ -45,10 +51,11 @@ This requires the following steps:
 
 ## Scraping
 
-1. Implement a scraper that inherits from `Scraper<TResourceDefinition>`. This will
-  specify how to call Azure Monitor.
+1. Implement a scraper, that inherits from `AzureMonitorScraper<TResourceDefinition>`, which will specify what resource to scrape with Azure Monitor.
 2. Hook your new scraper in our `MetricScraperFactory` which determines what scraper
   to use for the passed configuration.
+
+<!-- markdownlint-enable -->
 
 ------------------------
 

@@ -33,7 +33,7 @@ namespace Promitor.Core.Scraping.Factories
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
         /// <param name="prometheusMetricWriter">Metrics collector for our Prometheus scraping endpoint</param>
         /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
-        public IScraper<AzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
+        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
             IPrometheusMetricWriter prometheusMetricWriter, IRuntimeMetricsCollector runtimeMetricsCollector)
         {
             var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, runtimeMetricsCollector);
@@ -63,6 +63,16 @@ namespace Promitor.Core.Scraping.Factories
                     return new PostgreSqlScraper(scraperConfiguration);
                 case ResourceType.SqlDatabase:
                     return new SqlDatabaseScraper(scraperConfiguration);
+                case ResourceType.SqlManagedInstance:
+                    return new SqlManagedInstanceScraper(scraperConfiguration);
+                case ResourceType.VirtualMachineScaleSet:
+                    return new VirtualMachineScaleSetScraper(scraperConfiguration);
+                case ResourceType.AppPlan:
+                    return new AppPlanScraper(scraperConfiguration);
+                case ResourceType.WebApp:
+                    return new WebAppScraper(scraperConfiguration);
+                case ResourceType.FunctionApp:
+                    return new FunctionAppScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -71,7 +81,7 @@ namespace Promitor.Core.Scraping.Factories
         private AzureMonitorClient CreateAzureMonitorClient(AzureMetadata azureMetadata, IRuntimeMetricsCollector runtimeMetricsCollector)
         {
             var azureCredentials = DetermineAzureCredentials();
-            var azureMonitorClient = new AzureMonitorClient(azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, runtimeMetricsCollector, _logger);
+            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud,azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, runtimeMetricsCollector, _logger);
             return azureMonitorClient;
         }
 

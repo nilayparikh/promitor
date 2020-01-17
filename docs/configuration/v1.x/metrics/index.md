@@ -18,6 +18,8 @@ values are `v1`.
 - `azureMetadata.tenantId` - The id of the Azure tenant that will be queried.
 - `azureMetadata.subscriptionId` - The id of the default subscription to query.
 - `azureMetadata.resourceGroupName` - The name of the default resource group to query.
+- `azureMetadata.cloud` - The name of the Azure cloud to use. Options are `Global`
+ (default), `China`, `UsGov` & `Germany`.
 
 ### Metric Defaults
 
@@ -50,6 +52,11 @@ Every metric that is being declared needs to define the following fields:
 
 Additionally, the following fields are optional:
 
+- `azureMetricConfiguration.dimension.Name` - The name of the dimension that should
+   be used to scrape a multi-dimensional metric in Azure Monitor.
+  - ☝ *Promitor simply acts as a proxy and will not validate if it's supported or
+     not, we recommend verifying that the dimension is supported in the
+     [official documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported)*
 - `scraping.schedule` - A scraping schedule for the individual metric; overrides
   the the one specified in `metricDefaults`
 
@@ -65,6 +72,7 @@ azureMetadata:
   tenantId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   subscriptionId: yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
   resourceGroupName: promitor
+  cloud: China
 metricDefaults:
   aggregation:
     interval: 00:05:00
@@ -83,6 +91,8 @@ metrics:
       schedule: "0 */2 * ? * *"
     azureMetricConfiguration:
       metricName: ActiveMessages
+      dimension:
+        name: <dimension-name>
       aggregation:
         type: Total
         interval: 00:15:00
@@ -101,16 +111,21 @@ service supported by Azure Monitor.
 
 We also provide a simplified way to scrape the following Azure resources:
 
+- [Azure App Plan](app-plan)
 - [Azure Cache for Redis](redis-cache)
 - [Azure Container Instances](container-instances)
 - [Azure Container Registry](container-registry)
 - [Azure Cosmos DB](cosmos-db)
 - [Azure Database for PostgreSQL](postgresql)
+- [Azure Function App](function-app)
 - [Azure Network Interface](network-interface)
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure SQL Database](sql-database)
+- [Azure SQL Managed Instance](sql-managed-instance)
 - [Azure Storage Queue](storage-queue)
 - [Azure Virtual Machine](virtual-machine)
+- [Azure Virtual Machine Scale Set (VMSS)](virtual-machine-scale-set)
+- [Azure Web App](web-app)
 
 Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 
